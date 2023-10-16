@@ -11,6 +11,8 @@ export class BurgersController extends BaseController {
         this.router
             .get('', this.getBurgers)
             .get('/:burgerId', this.getBurgerById)
+            .post('', this.createBurger)
+            .delete('/:burgerId', this.removeBurger)
     }
     async getBurgers(request, response, next) {
         try {
@@ -26,6 +28,24 @@ export class BurgersController extends BaseController {
             const burgerId = request.params.burgerId
             const burger = await burgersService.getBurgerById(burgerId)
             return response.send(burger)
+        } catch (error) {
+            next(error)
+        }
+    }
+    async createBurger(request, response, next) {
+        try {
+            const burgerData = request.body
+            const burger = await burgersService.createBurger(burgerData)
+            response.send(burger)
+        } catch (error) {
+            next(error)
+        }
+    }
+    async removeBurger(request, response, next) {
+        try {
+            const burgerId = request.params.burgerId
+            await burgersService.removeBurger(burgerId)
+            response.send('we want to removed this burger. It  was not a good seller. Like at all.')
         } catch (error) {
             next(error)
         }
